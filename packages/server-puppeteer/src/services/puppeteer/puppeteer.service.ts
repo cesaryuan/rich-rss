@@ -98,13 +98,13 @@ export class PuppeteerService {
         this.startWorker(this.currentActiveWorkers).catch(reject);
       }
     }).catch((e) => {
-      this.logger.error(e)
+      this.logger.error(e);
       return {
         errorMessage: e?.message,
         screenshot: null,
         isError: true,
         html: null,
-      }
+      };
     });
   }
 
@@ -196,7 +196,7 @@ export class PuppeteerService {
               () => reject(`timeout ${job.timeoutMillis} exceeded`),
               job.timeoutMillis - 1000,
             ),
-          )
+          ),
         ]);
         await browser.close();
         this.logger.log(

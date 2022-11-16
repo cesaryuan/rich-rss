@@ -1,1 +1,111 @@
-/home/damoeb/dev/private/rich-rss/docs/opmls/engineering_blogs.opml.xml
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.0">
+  <head>
+    <dateCreated>Wed, 26 May 2021 05:13:49 +0000</dateCreated>
+    <title>Tiny Tiny RSS Feed Export</title>
+  </head>
+  <body>
+    <outline text="telegram" ttrssSortOrder="0">
+</outline>
+    <outline text="优质APP分享" ttrssSortOrder="0">
+      <outline type="rss" text="小众软件" xmlUrl="http://feed.appinn.com" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://www.appinn.com/"/>
+      <outline type="rss" text="异次元软件世界" xmlUrl="http://feed.iplaysoft.com" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://www.iplaysoft.com/"/>
+    </outline>
+    <outline text="优质技术博客" ttrssSortOrder="0">
+      <outline type="rss" text="GitHubDaily的微博" xmlUrl="https://api.izgq.net/weibo/rss/5722964389" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://weibo.com/5722964389"/>
+      <outline type="rss" text="Mark's Blog" xmlUrl="https://www.quchao.net/feed/" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.quchao.net/"/>
+      <outline type="rss" text="Quicker / Quicker版本更新历史" xmlUrl="https://rsshub.app/yuque/doc/264668" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.yuque.com/api/v2/repos/264668"/>
+      <outline type="rss" text="Rat's Blog" xmlUrl="https://www.moerats.com/feed/" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.moerats.com/"/>
+      <outline type="rss" text="Sordum.org" xmlUrl="https://www.sordum.org/feed/" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.sordum.org/"/>
+      <outline type="rss" text="kkocdko's blog" xmlUrl="https://kkocdko.github.io/feed.xml" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://kkocdko.github.io/"/>
+      <outline type="rss" text="体验盒子" xmlUrl="https://www.uedbox.com/feed" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.uedbox.com/"/>
+      <outline type="rss" text="博客园_strnghrs" xmlUrl="https://www.cnblogs.com/stronghorse/rss" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.cnblogs.com/stronghorse/rss"/>
+      <outline type="rss" text="少数派" xmlUrl="https://sspai.com/feed" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://sspai.com/feed"/>
+      <outline type="rss" text="张立良的博客" xmlUrl="http://blog.sina.com.cn/rss/1418257321.xml" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://blog.sina.com.cn/ahzll"/>
+      <outline type="rss" text="感恩生活" xmlUrl="http://blog.sina.com.cn/rss/1329297872.xml" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://blog.sina.com.cn/pingerhappy"/>
+      <outline type="rss" text="挖站否-挖掘建站的乐趣" xmlUrl="https://wzfou.com/feed/" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://wzfou.com/"/>
+      <outline type="rss" text="笛声" xmlUrl="https://hqidi.com/feed" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://hqidi.com/"/>
+    </outline>
+    <outline text="有趣" ttrssSortOrder="0">
+      <outline type="rss" text="天才小熊猫的微博" xmlUrl="https://api.izgq.net/weibo/rss/1563926367" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://weibo.com/1563926367"/>
+    </outline>
+    <outline text="破解软件" ttrssSortOrder="0">
+      <outline type="rss" text="423Down" xmlUrl="http://www.423down.com/feed" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://www.423down.com/"/>
+      <outline type="rss" text="老殁 | 殁漂遥" xmlUrl="https://www.mpyit.com/feed" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.mpyit.com/"/>
+    </outline>
+    <outline text="线报" ttrssSortOrder="0">
+      <outline type="rss" text="如有乐享" xmlUrl="http://51.ruyo.net/feed/" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://51.ruyo.net/"/>
+    </outline>
+    <outline type="rss" text="HelloGitHub 月刊" xmlUrl="https://hellogithub.com/rss" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://hellogithub.com"/>
+    <outline type="rss" text="JerryQu 的小站" xmlUrl="https://imququ.com/rss.html" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://imququ.com"/>
+    <outline type="rss" text="oD^Blog" xmlUrl="https://odcn.top/feed/" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://odcn.top/"/>
+    <outline type="rss" text="「index.php」- 妮妮羊毛分享🅥 - Telegram 频道" xmlUrl="https://rsshub.app/telegram/channel/NiNiShare/index.php" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://t.me/s/NiNiShare?q=index.php"/>
+    <outline type="rss" text="「挖互联网」" xmlUrl="https://tigdig.com/feed/rss" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://tigdig.com"/>
+    <outline type="rss" text="不死鸟 - 分享为王" xmlUrl="https://hao.su/feed/" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://hao.su/"/>
+    <outline type="rss" text="先知安全技术社区" xmlUrl="https://xz.aliyun.com/feed" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="http://xz.aliyun.com/forum/"/>
+    <outline type="rss" text="博客园_孙行者、" xmlUrl="https://www.cnblogs.com/ElEGenT/rss" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://www.cnblogs.com/ElEGenT/"/>
+    <outline type="rss" text="妮妮羊毛分享🅥 - Telegram 频道" xmlUrl="https://rsshub.app/telegram/channel/NiNiShare" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://t.me/s/NiNiShare"/>
+    <outline type="rss" text="福利吧" xmlUrl="https://fuliba2020.net/feed" ttrssSortOrder="0" ttrssUpdateInterval="0" htmlUrl="https://fuliba2020.net"/>
+    <outline text="tt-rss-prefs" schema-version="139">
+      <outline pref-name="ALLOW_DUPLICATE_POSTS" value="false"/>
+      <outline pref-name="AUTO_ASSIGN_LABELS" value="false"/>
+      <outline pref-name="BLACKLISTED_TAGS" value="main, generic, misc, uncategorized, blog, blogroll, general, news"/>
+      <outline pref-name="CDM_AUTO_CATCHUP" value="false"/>
+      <outline pref-name="CDM_EXPANDED" value="false"/>
+      <outline pref-name="COMBINED_DISPLAY_MODE" value="false"/>
+      <outline pref-name="CONFIRM_FEED_CATCHUP" value="true"/>
+      <outline pref-name="DEFAULT_ARTICLE_LIMIT" value="30"/>
+      <outline pref-name="DEFAULT_SEARCH_LANGUAGE" value="Simple"/>
+      <outline pref-name="DEFAULT_UPDATE_INTERVAL" value="30"/>
+      <outline pref-name="DIGEST_CATCHUP" value="false"/>
+      <outline pref-name="DIGEST_ENABLE" value="false"/>
+      <outline pref-name="DIGEST_PREFERRED_TIME" value="00:00"/>
+      <outline pref-name="ENABLE_API_ACCESS" value="true"/>
+      <outline pref-name="ENABLE_FEED_CATS" value="true"/>
+      <outline pref-name="FEEDS_SORT_BY_UNREAD" value="false"/>
+      <outline pref-name="FRESH_ARTICLE_MAX_AGE" value="24"/>
+      <outline pref-name="HIDE_READ_FEEDS" value="false"/>
+      <outline pref-name="HIDE_READ_SHOWS_SPECIAL" value="true"/>
+      <outline pref-name="LONG_DATE_FORMAT" value="D, M d Y - G:i"/>
+      <outline pref-name="ON_CATCHUP_SHOW_NEXT_FEED" value="false"/>
+      <outline pref-name="PURGE_OLD_DAYS" value="60"/>
+      <outline pref-name="PURGE_UNREAD_ARTICLES" value="true"/>
+      <outline pref-name="REVERSE_HEADLINES" value="false"/>
+      <outline pref-name="SHORT_DATE_FORMAT" value="M d, G:i"/>
+      <outline pref-name="SHOW_CONTENT_PREVIEW" value="true"/>
+      <outline pref-name="SORT_HEADLINES_BY_FEED_DATE" value="false"/>
+      <outline pref-name="SSL_CERT_SERIAL" value=""/>
+      <outline pref-name="STRIP_IMAGES" value="false"/>
+      <outline pref-name="STRIP_UNSAFE_TAGS" value="true"/>
+      <outline pref-name="USER_CSS_THEME" value=""/>
+      <outline pref-name="USER_LANGUAGE" value="auto"/>
+      <outline pref-name="USER_STYLESHEET" value=""/>
+      <outline pref-name="USER_TIMEZONE" value="Automatic"/>
+      <outline pref-name="VFEED_GROUP_BY_FEED" value="false"/>
+      <outline pref-name="_COLLAPSED_FEEDLIST" value="false"/>
+      <outline pref-name="_COLLAPSED_LABELS" value="false"/>
+      <outline pref-name="_COLLAPSED_SPECIAL" value="false"/>
+      <outline pref-name="_COLLAPSED_UNCAT" value="false"/>
+      <outline pref-name="_DEFAULT_INCLUDE_CHILDREN" value="false"/>
+      <outline pref-name="_DEFAULT_VIEW_LIMIT" value="30"/>
+      <outline pref-name="_DEFAULT_VIEW_MODE" value="unread"/>
+      <outline pref-name="_DEFAULT_VIEW_ORDER_BY" value="feed_dates"/>
+      <outline pref-name="_ENABLED_PLUGINS" value="feediron,mail,mercury_fulltext,toggle_sidebar"/>
+      <outline pref-name="_MOBILE_BROWSE_CATS" value="true"/>
+      <outline pref-name="_MOBILE_ENABLE_CATS" value="false"/>
+      <outline pref-name="_MOBILE_HIDE_READ" value="false"/>
+      <outline pref-name="_MOBILE_REVERSE_HEADLINES" value="false"/>
+      <outline pref-name="_MOBILE_SHOW_IMAGES" value="false"/>
+      <outline pref-name="_MOBILE_SORT_FEEDS_UNREAD" value="false"/>
+      <outline pref-name="_PREFS_ACTIVE_TAB" value=""/>
+      <outline pref-name="_PREFS_SHOW_EMPTY_CATS" value="false"/>
+      <outline pref-name="_THEME_ID" value="0"/>
+    </outline>
+    <outline text="tt-rss-labels" schema-version="139"/>
+    <outline text="tt-rss-filters" schema-version="139">
+      <outline filter-type="2"><![CDATA[{"0":1,"1":1,"match_any_rule":true,"2":true,"inverse":false,"3":false,"title":"\u5df2\u8bfb","4":"\u5df2\u8bfb","order_id":0,"5":0,"last_triggered":"2021-03-24 01:39:28.924054","6":"2021-03-24 01:39:28.924054","enabled":true,"7":true,"rules":[{"reg_exp":"IOS","inverse":false,"filter_type":1,"cat_filter":false,"match":[["Unknown feed (53)",false,false]]},{"reg_exp":"\u6d41\u5a92\u4f53(\u52a8\u6001|\u76d8\u70b9)","inverse":false,"filter_type":3,"cat_filter":false,"match":[["Unknown feed (53)",false,false]]},{"reg_exp":"\u743c\u65af\u7684\u952e\u5708\u53d1\u8f66\u60c5\u62a5","inverse":false,"filter_type":3,"cat_filter":false,"match":[["Unknown feed (53)",false,false]]}],"actions":[{"action_id":2,"action_param":""}]}]]></outline>
+      <outline filter-type="2"><![CDATA[{"0":2,"1":1,"match_any_rule":true,"2":true,"inverse":false,"3":false,"title":"\u7d27\u6025","4":"\u7d27\u6025","order_id":0,"5":0,"last_triggered":"2021-05-25 07:40:57.017126","6":"2021-05-25 07:40:57.017126","enabled":true,"7":true,"rules":[{"reg_exp":".*","inverse":false,"filter_type":3,"cat_filter":false,"match":[["\u5982\u6709\u4e50\u4eab",false,false]]},{"reg_exp":"\u901f\u5ea6|\u559c\u52a0\u4e00|\u9001\u5b8c|\u8d60\u5b8c","inverse":false,"filter_type":3,"cat_filter":false,"match":[["Unknown feed (56)",false,false]]},{"reg_exp":".*","inverse":false,"filter_type":3,"cat_filter":false,"match":[["\u5929\u624d\u5c0f\u718a\u732b\u7684\u5fae\u535a",false,false]]}],"actions":[{"action_id":5,"action_param":""}]}]]></outline>
+      <outline filter-type="2"><![CDATA[{"0":3,"1":1,"match_any_rule":true,"2":true,"inverse":false,"3":false,"title":"\u5220\u9664","4":"\u5220\u9664","order_id":0,"5":0,"last_triggered":"2021-05-26 03:34:49.80338","6":"2021-05-26 03:34:49.80338","enabled":true,"7":true,"rules":[{"reg_exp":"(\u624b\u6162\u65e0|\u6240\u6709\u4eba|\u7f6e\u9876|\u901f\u64b8)","inverse":true,"filter_type":1,"cat_filter":false,"match":[["\u59ae\u59ae\u7f8a\u6bdb\u5206\u4eab\ud83c\udd65 - Telegram \u9891\u9053",false,false]]},{"reg_exp":"2345","inverse":false,"filter_type":1,"cat_filter":false,"match":[["\u7834\u89e3\u8f6f\u4ef6",true,false]]},{"reg_exp":"Apple Watch","inverse":false,"filter_type":1,"cat_filter":false,"match":[[0,false,true]]},{"reg_exp":"\u6d4b\u8bd5\u4e00\u4e0b\u54c8\u54c8\u54c8","inverse":false,"filter_type":1,"cat_filter":false,"match":[["Unknown feed (53)",false,false]]}],"actions":[{"action_id":1,"action_param":""}]}]]></outline>
+    </outline>
+  </body>
+</opml>

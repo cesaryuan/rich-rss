@@ -68,3 +68,9 @@ tasks.register<YarnTask>("start") {
   args.set(listOf("start:dev"))
   dependsOn(yarnInstallTask)
 }
+
+tasks.register("printPathEnv") {
+  doLast {
+    println(System.getenv("PATH"))
+  }
+}

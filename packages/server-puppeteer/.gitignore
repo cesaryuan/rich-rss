@@ -1,4 +1,4 @@
 # compiled output
-dist
+#dist
 node_modules
 prisma/dev.db
