@@ -9,5 +9,5 @@ package-lock.json
 *.log
 docs/inspiration
 docs/network.dia
-
-!build/libs/*
+node_modules
+packages/server-mgmt

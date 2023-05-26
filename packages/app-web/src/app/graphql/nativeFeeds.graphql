@@ -1,0 +1,62 @@
+query nativeFeedById($data: NativeFeedWhereInput!) {
+  nativeFeed(data: $data) {
+    ...BasicNativeFeed
+    genericFeed {
+      id
+    }
+    importers {
+      ...BasicImporter
+      bucket {
+        ...BasicBucket
+      }
+    }
+  }
+}
+
+query searchNativeFeeds($data: NativeFeedsInput!) {
+  nativeFeeds(data: $data) {
+    nativeFeeds {
+      ...BasicNativeFeed
+    }
+    pagination {
+      ...Pagination
+    }
+  }
+}
+
+mutation createNativeFeeds($data: CreateNativeFeedsInput!) {
+  createNativeFeeds(data: $data) {
+    id
+  }
+}
+
+mutation updateNativeFeed($data: NativeFeedUpdateInput!) {
+  updateNativeFeed(data: $data) {
+    id
+  }
+}
+
+mutation deleteNativeFeed($data: NativeFeedDeleteInput!) {
+  deleteNativeFeed(data: $data)
+}
+
+query remoteNativeFeed($data: RemoteNativeFeedInput!) {
+  remoteNativeFeed(data: $data) {
+    title
+    description
+    websiteUrl
+    feedUrl
+    items {
+      omitted
+      item {
+        url
+        title
+        contentText
+        contentRaw
+        contentRawMime
+        publishedAt
+        startingAt
+      }
+    }
+  }
+}

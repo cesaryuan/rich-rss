@@ -1,0 +1,11 @@
+query serverSettings {
+  serverSettings {
+    apiUrls {
+      webToFeed
+    }
+    features {
+      name
+      state
+    }
+  }
+}

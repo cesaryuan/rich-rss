@@ -1,0 +1,75 @@
+<div class="flex">
+  <div style="flex: 1">
+    <ion-accordion-group [multiple]="true" value="element">
+      <ion-accordion value="element" toggle-icon-slot="start">
+        <ion-item slot="header">
+          <ion-label> Page Fragment </ion-label>
+        </ion-item>
+        <ion-grid slot="content">
+          <ion-row>
+            <ion-col size="4">XPath</ion-col>
+            <ion-col>
+              <ion-input
+                name="fragmentXpath"
+                aria-label="fragmentXpath"
+                placeholder="xpath"
+                [formControl]="formGroup.controls.fragmentXpath"
+              ></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-accordion>
+
+      <ion-accordion value="matcher" toggle-icon-slot="start">
+        <ion-item slot="header">
+          <ion-label>Compare By</ion-label>
+        </ion-item>
+        <ion-grid slot="content">
+          <ion-row>
+            <ion-col push="1" size="11">
+              <ion-radio-group
+                value="text"
+                [formControl]="formGroup.controls.compareBy"
+              >
+                <ion-item>
+                  <ion-label>Text</ion-label>
+                  <ion-radio
+                    slot="end"
+                    aria-label="text"
+                    value="text"
+                  ></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label>Markup</ion-label>
+                  <ion-radio
+                    slot="end"
+                    aria-label="markup"
+                    value="markup"
+                  ></ion-radio>
+                </ion-item>
+
+                <ion-item>
+                  <ion-label>Pixel</ion-label>
+                  <ion-radio
+                    slot="end"
+                    aria-label="pixel"
+                    value="pixel"
+                  ></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-accordion>
+    </ion-accordion-group>
+  </div>
+
+  <div style="flex: 2; display: flex">
+    <app-embedded-website
+      class="flex"
+      [highlightXpath]="formGroup.value.fragmentXpath"
+      [document]="embedWebsiteData"
+    ></app-embedded-website>
+  </div>
+</div>

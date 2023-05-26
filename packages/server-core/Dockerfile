@@ -1,30 +1,31 @@
-FROM jcxldn/openjdk-alpine:17-jdk
-ARG workdir=/usr/rich-rss
+FROM amazoncorretto:17-alpine-jdk as build
+WORKDIR /usr/feedless
+COPY docker-entrypoint.sh pre-boot.sh ./
+COPY build/libs/app.jar app.jar
+
+
+FROM amazoncorretto:17-alpine-jdk
+ARG workdir=/usr/feedless
 WORKDIR $workdir
 
-ARG CORE_VERSION
-ARG GIT_HASH
-ENV spring_profiles_active="prod" \
-    AUTH_TOKEN_ANONYMOUS_VALIDFORDAYS="" \
-    PUPPETEER_HOST="" \
-    LOG_LEVEL="error" \
-    CORE_VERSION=$CORE_VERSION \
-    MASTER_URL="https://richrss.migor.org" \
-    GIT_HASH=$GIT_HASH \
-    ENABLE_FULLTEXT="" \
-    MAX_RECOVERY_PER_FEED="4" \
-    PUPPETEER_TIMEOUT_MS="10000"
-
+ARG APP_CORE_VERSION
+ARG APP_GIT_HASH
+ENV APP_ACTIVE_PROFILES="prod" \
+    APP_LOG_LEVEL="error" \
+    APP_CORE_VERSION=$APP_CORE_VERSION \
+    APP_GIT_HASH=$APP_GIT_HASH
 EXPOSE 8080
 RUN addgroup -g 1000 java && \
     adduser -u 1000 -G java -s /bin/sh -D java
-COPY --chown=java:java docker-entrypoint.sh ./
-COPY --chown=java:java build/libs/app.jar app.jar
-RUN mkdir static && \
-    echo "serve static assets <a href=\"https://docs.docker.com/engine/reference/commandline/run/#mount-volume--v---read-only\" target=\"_blank\">by mounting them</a> in $workdir/static" > static/index.html && \
-    chmod -R g-w . && \
-    chmod -R o= . && \
-    chown -R java .
+
+RUN apk add --update --no-cache python3 \
+    && ln -sf python3 /usr/bin/python \
+    && wget https://github.com/yt-dlp/yt-dlp/releases/download/2023.03.04/yt-dlp \
+    && chmod +x yt-dlp && chown java:java yt-dlp && ln -s `pwd`/yt-dlp /usr/local/bin
+
 USER java
+COPY --from=build \
+  --chown=java:java /usr/feedless/* ./
+
 # use supervisord https://gdevillele.github.io/engine/admin/using_supervisord/
 CMD ["sh", "./docker-entrypoint.sh"]

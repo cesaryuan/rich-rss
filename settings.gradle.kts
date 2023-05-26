@@ -1,10 +1,10 @@
-rootProject.name = "rich-rss"
+rootProject.name = "feedless"
 
-include("packages:app")
+include("packages:app-web")
+include("packages:app-cli")
+include("packages:client-lib")
 include("packages:server-core")
-//include("packages:server-graph")
-include("packages:server-mgmt")
-include("packages:server-puppeteer")
+include("packages:agent")
 
 buildscript {
   repositories {

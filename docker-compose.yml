@@ -4,29 +4,78 @@ version: '3.4'
 
 services:
 
-  # https://hub.docker.com/_/rabbitmq/
-  # https://newbedev.com/how-to-add-initial-users-when-starting-a-rabbitmq-docker-container
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:3.9
+#  neo4j:
+#    image: neo4j
+#    ports:
+#      - "7474:7474"
+#      - "7687:7687"
+#    volumes:
+#      - ./conf:/conf
+#      - ./data:/data
+#      - ./import:/import
+#      - ./logs:/logs
+#      - ./plugins:/plugins
+#    environment:
+      # Raise memory limits
+#      - NEO4J_dbms_memory_pagecache_size=1G
+#      - NEO4J_dbms.memory.heap.initial_size=1G
+#      - NEO4J_dbms_memory_heap_max__size=1G
+
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#_setting_jvm_heap_size
+#  elastic:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+#    container_name: es
+#    environment:
+#      #- ES_JAVA_OPTS="-Xms1g -Xmx1g"
+#      - discovery.type=single-node
+##      - node.name=es-node
+##      - cluster.name=es-cluster
+##      - discovery.type=single-node
+#    ports:
+#      - "9200:9200"
+
+  smtp:
+    image: jijiechen/papercut:latest
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    networks:
-      - rabbitmq
+      - "25:25"
+      - "37408:37408"
+
+  nitter:
+    container_name: nitter
+    image: zedeus/nitter:latest
+    volumes:
+      - ./docker/nitter.conf:/src/nitter.conf:ro
+    depends_on:
+      - nitter-redis
+    restart: unless-stopped
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:8080/Jack/status/20 || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+
+  nitter-redis:
+    image: redis:6-alpine
+    container_name: nitter-redis
+    command: redis-server --save 60 1 --loglevel warning
+#    volumes:
+#      - nitter-redis:/data
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli ping
+      interval: 30s
+      timeout: 5s
+      retries: 2
 
   # https://hub.docker.com/_/postgres/
   postgres:
-    image: postgres:14
+    image: postgres:15
     container_name: postgres
-    restart: always
+    restart: unless-stopped
     environment:
-#      - POSTGRES_DB=${databaseName}
-      - POSTGRES_DB=rich-rss
-#      - POSTGRES_USER=${sqlUser}
-      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=${databasePassword}
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     expose:
       - 5432
     ports:
@@ -34,43 +83,52 @@ services:
     networks:
       - postgres
 
-  rich-puppeteer:
-    image: damoeb/rich-rss:puppeteer-0
+  feedless-agent:
+    image: damoeb/feedless:agent-0.1
+#    deploy:
+#      replicas: 2
     security_opt:
       - seccomp=./chrome.json
-    restart: always
+    restart: unless-stopped
+    environment:
+      - APP_EMAIL=${APP_ROOT_EMAIL}
+      - APP_SECRET_KEY=${APP_ROOT_SECRET_KEY}
+      - APP_HOST=feedless-core:8080
+      - APP_SECURE=false
     ports:
       - "3000:3000"
 #    healthcheck:
 #      test: curl -f https://localhost:3000 || exit 1
-    environment:
-      - RABBITMQ_URL=amqp://${rabbitMqUser}:${rabbitMqPassword}@rabbitmq
     networks:
-      - puppeteer
       - monitoring
 
-  rich-core:
-    image: damoeb/rich-rss:core
-    restart: always
+  feedless-app:
+    image: damoeb/feedless:app-0.1
+    restart: unless-stopped
+    volumes:
+      - ./docker/app/app-config.json:/usr/share/nginx/html/config.json
+    ports:
+      - "4200:80"
+
+  feedless-core:
+    image: damoeb/feedless:core-0.1
+    restart: unless-stopped
 #    healthcheck:
 #      test: curl -f https://localhost:8080 || exit 1
     depends_on:
       - postgres
-      - rabbitmq
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
     environment:
-      - sqlUser=${sqlUser}
-      - sqlPassword=${sqlPassword}
-      - DATABASE_URL=jdbc:postgresql://postgres:5432/${databaseName}
-      - RABBITMQ_URL=rabbitmq
-      - RABBITMQ_USERNAME=${rabbitMqUser}
-      - RABBITMQ_PASSWORD=${rabbitMqPassword}
-      - nitterHost=nitter
-      - invidiousHost=invidious
+      - APP_DATABASE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - APP_ACTIVE_PROFILES=database,cache,metrics
+      - APP_WHITELISTED_HOSTS=feedless-core
+      - AUTH_TOKEN_ANONYMOUS_VALIDFORDAYS=3
     networks:
       - postgres
-      - rabbitmq
       - monitoring
-      - puppeteer
 
 # ----------------------------------------------------------------------------------------------------------------------
 # -- MONITORING
@@ -86,10 +144,23 @@ services:
     networks:
       - monitoring
 
+  promtail:
+    image: grafana/promtail:2.5.0
+    volumes:
+      - /var/log:/var/log
+      - ./docker/promtail:/etc/promtail
+    ports:
+      - "3200:3100"
+    command: -config.file=/etc/promtail/promtail.yml
+    networks:
+      - monitoring
+
   prometheus:
     image: prom/prometheus
+    environment:
+      - APP_ACTUATOR_PASSWORD=${APP_ACTUATOR_PASSWORD}
     volumes:
-      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     networks:
@@ -97,22 +168,13 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-#    container_name: grafana-service
     ports:
       - "3000:3000"
     networks:
       - monitoring
 
-secrets:
-  TOKEN_SECRET:
-    file: ./tokenSecret.txt
-
 networks:
   postgres:
     driver: bridge
-  rabbitmq:
-    driver: bridge
   monitoring:
-    driver: bridge
-  puppeteer:
     driver: bridge

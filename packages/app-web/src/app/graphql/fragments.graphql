@@ -1,0 +1,182 @@
+fragment BasicSelectors on Selectors {
+  contextXPath
+  linkXPath
+  extendContext
+  dateXPath
+  paginationXPath
+  dateIsStartOfEvent
+}
+
+fragment BasicRefineOptions on RefineOptions {
+  filter
+}
+fragment BasicFetchOptions on FetchOptions {
+  prerender
+  websiteUrl
+  prerenderScript
+  prerenderWaitUntil
+}
+
+fragment BasicGenericFeed on GenericFeed {
+  id
+  feedUrl
+  hash
+  specification {
+    selectors {
+      ...BasicSelectors
+    }
+    fetchOptions {
+      ...BasicFetchOptions
+    }
+    refineOptions {
+      ...BasicRefineOptions
+    }
+  }
+  createdAt
+}
+
+fragment BasicArticle on Article {
+  id
+  status
+  type
+  status
+  streamId
+  createdAt
+}
+
+fragment BasicFeature on Feature {
+  name
+  state
+  value {
+    numVal {
+      value
+    }
+    boolVal {
+      value
+    }
+  }
+}
+
+fragment BasicPlan on Plan {
+  id
+  name
+  availability
+  isPrimary
+  costs
+}
+
+fragment Pagination on Pagination {
+  page
+  isLast
+  isFirst
+  isEmpty
+}
+
+fragment BasicWebDocument on WebDocument {
+  id
+  title
+  description
+  url
+  imageUrl
+  createdAt
+}
+
+fragment BasicEnclosure on Enclosure {
+  size
+  duration
+  type
+  url
+}
+
+fragment BasicHistogram on Histogram {
+  items {
+    index
+    count
+  }
+  frame
+}
+
+fragment BasicContent on WebDocument {
+  title
+  description
+  contentTitle
+  contentText
+  contentRaw
+  contentRawMime
+  url
+  imageUrl
+  publishedAt
+  startingAt
+  updatedAt
+  tags
+  createdAt
+  enclosures {
+    ...BasicEnclosure
+  }
+}
+
+fragment DeepArticle on Article {
+  ...BasicArticle
+  webDocument {
+    ...BasicContent
+  }
+}
+
+fragment BasicBucket on Bucket {
+  id
+  title
+  description
+  webhook
+  imageUrl
+  streamId
+  websiteUrl
+  createdAt
+  tags
+  visibility
+  ownerId
+  importersCount
+  histogram(frame: last_month) {
+    ...BasicHistogram
+  }
+}
+
+fragment BasicImporter on Importer {
+  id
+  autoRelease
+  filter
+  title
+  plugins
+  lastUpdatedAt
+  createdAt
+  nativeFeedId
+  bucketId
+  histogram(frame: last_month) {
+    ...BasicHistogram
+  }
+  segmented {
+    digest
+    scheduleExpression
+    size
+    sortAsc
+    sortBy
+  }
+}
+
+fragment BasicNativeFeed on NativeFeed {
+  id
+  title
+  description
+  domain
+  imageUrl
+  iconUrl
+  websiteUrl
+  feedUrl
+  status
+  lastUpdatedAt
+  lastChangedAt
+  streamId
+  lat
+  lon
+  ownerId
+  createdAt
+}

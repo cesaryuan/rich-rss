@@ -1,59 +1,87 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("org.springframework.boot") version "2.6.1"
-  id("io.spring.dependency-management") version "1.0.11.RELEASE"
-  id("io.github.kobylynskyi.graphql.codegen") version "5.3.0"
-  id("org.jlleitschuh.gradle.ktlint") version "10.2.0"
+  id("org.springframework.boot") version "3.0.3"
   id("com.adarshr.test-logger") version "3.2.0"
-  kotlin("jvm") version "1.6.10"
-  kotlin("plugin.spring") version "1.6.10"
-  id("org.ajoberstar.grgit") version "4.1.0"
+  id("com.netflix.dgs.codegen") version "5.6.9"
+//   https://github.com/google/protobuf-gradle-plugin
+  id("org.ajoberstar.grgit") version "5.0.0"
+  id("com.google.protobuf") version "0.9.2"
+  kotlin("jvm") version "1.8.10"
+  kotlin("plugin.spring") version "1.8.10"
 }
 
-group = "org.migor.rich.rss"
+apply(plugin = "io.spring.dependency-management")
+
+group = "org.migor.feedless"
 version = "0.0.1-SNAPSHOT"
 
 repositories {
   mavenCentral()
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_11
 sourceSets.getByName("main") {
   java.srcDir("src/main/java")
   java.srcDir("src/main/kotlin")
   resources.srcDir("src/main/resources")
 }
 
+kotlin {
+  jvmToolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+  }
+}
+
 tasks.withType<Copy> { duplicatesStrategy = DuplicatesStrategy.EXCLUDE }
+
+val versions = mapOf(
+  "kotlinxCoroutines" to "1.6.0",
+//  "grpc" to "1.53.0",
+  "dgs" to "6.0.1"
+)
 
 dependencies {
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions["kotlinxCoroutines"]}")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${versions["kotlinxCoroutines"]}")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-  implementation("org.springframework.boot:spring-boot-starter-data-rest")
+//  implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
   implementation("org.springframework.boot:spring-boot-starter-web")
+  implementation("org.springframework:spring-aspects")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("org.springframework.boot:spring-boot-devtools")
   implementation("org.springframework.boot:spring-boot-starter-validation")
+  implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-  implementation("org.springframework.boot:spring-boot-starter-amqp")
-  testImplementation("org.springframework.amqp:spring-rabbit-test")
-  implementation("org.apache.tika:tika-core:2.2.1")
+  implementation("org.apache.tika:tika-core:2.4.1")
   implementation("com.github.vladimir-bukhtoyarov:bucket4j-core:7.5.0")
   implementation("org.redundent:kotlin-xml-builder:1.7.4")
+  // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+  implementation("org.apache.commons:commons-text:1.10.0")
 
   // graphql
-//  implementation("com.graphql-java:graphql-spring-boot-starter:5.0.2")
-//  implementation("com.graphql-java:graphql-java-tools:5.2.4")
+//  implementation("org.springframework.boot:spring-boot-starter-graphql")
+  implementation("org.springframework.boot:spring-boot-starter-websocket")
+  implementation("org.springframework.security:spring-security-messaging")
+  implementation(platform("com.netflix.graphql.dgs:graphql-dgs-platform-dependencies:${versions["dgs"]}"))
+  implementation("com.netflix.graphql.dgs:graphql-dgs-spring-boot-starter:${versions["dgs"]}")
+  implementation("com.netflix.graphql.dgs:graphql-dgs-extended-scalars:${versions["dgs"]}")
+  implementation("com.netflix.graphql.dgs:graphql-dgs-subscriptions-websockets:${versions["dgs"]}")
+  implementation("com.netflix.graphql.dgs:graphql-dgs-subscriptions-websockets-autoconfigure:${versions["dgs"]}")
+
+//  implementation("com.google.firebase:firebase-messaging:23.1.1")
 
   // cache
   implementation("org.springframework.boot:spring-boot-starter-cache")
-  implementation("javax.cache:cache-api:1.1.1")
-  implementation("org.ehcache:ehcache:3.8.1")
+  implementation("org.ehcache:ehcache:3.10.8")
 
   // monitoring
   implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -62,26 +90,43 @@ dependencies {
   implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
   implementation("com.github.loki4j:loki-logback-appender:1.3.2")
 
+  // grpc
+//  implementation("io.grpc:grpc-netty:${versions["grpc"]}")
+//  implementation("io.grpc:grpc-protobuf:${versions["grpc"]}")
+//  implementation("io.grpc:grpc-stub:${versions["grpc"]}")
+
   // security
-  implementation("com.auth0:java-jwt:3.19.2")
   implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
   // json feed
-  implementation(files("libs/pertwee-1.1.0.jar"))
-  implementation("org.json:json:20211205")
-  implementation("com.google.guava:guava:28.2-jre")
+  implementation("org.json:json:20220924")
+  implementation("com.google.guava:guava:31.1-jre")
 
   implementation("org.apache.commons:commons-lang3:3.11")
   implementation("commons-io:commons-io:2.11.0")
 
-  implementation("org.postgresql:postgresql:42.3.1")
-//  implementation("com.h2database:h2:2.1.212")
-  implementation("com.vladmihalcea:hibernate-types-52:2.14.0")
+  // reactor
+  // https://mvnrepository.com/artifact/io.projectreactor/reactor-core
+  implementation("io.projectreactor:reactor-core:3.5.0")
+//  implementation("org.postgresql:r2dbc-postgresql:1.0.0.RELEASE")
+
+  // elastic search
+  implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+
+  // database
+  implementation("org.postgresql:postgresql:42.5.1")
+  testImplementation("com.h2database:h2:2.1.214")
+  implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
+//  https://dzone.com/articles/build-a-spring-boot-app-with-flyway-and-postgres
+  implementation("org.flywaydb:flyway-core:9.16.1")
+
+
   implementation("org.asynchttpclient:async-http-client:2.12.3")
   implementation("com.guseyn.broken-xml:broken-xml:1.0.21")
-  implementation("com.rometools:rome:1.16.0")
-//  implementation("com.rometools:rome-modules:1.16.0")
-  implementation("org.jsoup:jsoup:1.14.3")
+  implementation("com.rometools:rome:1.18.0")
+  implementation("com.rometools:rome-modules:1.16.0")
+  implementation("org.jsoup:jsoup:1.15.3")
   implementation("us.codecraft:xsoup:0.3.2")
   implementation("com.google.code.gson:gson:2.8.9")
 
@@ -89,36 +134,40 @@ dependencies {
   implementation("com.github.shyiko.skedule:skedule:0.4.0")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
-  testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-  implementation("org.junit.jupiter:junit-jupiter:5.8.2")
-  testImplementation("com.h2database:h2:2.0.202")
+  testImplementation("org.junit.jupiter:junit-jupiter-api")
+  implementation("org.junit.jupiter:junit-jupiter")
+//  testImplementation("com.h2database:h2:2.0.214")
 
 //  testRuntime("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+//  implementation("com.github.kotlin-telegram-bot:kotlin-telegram-bot:6.0.4")
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
   this.archiveFileName.set("app.${archiveExtension.get()}")
 }
 
-tasks.named<io.github.kobylynskyi.graphql.codegen.gradle.GraphQLCodegenGradleTask>("graphqlCodegen") {
-  // https://github.com/kobylynskyi/graphql-java-codegen/blob/master/docs/codegen-options.md
-  graphqlSchemaPaths = listOf("$projectDir/../server-commons/mq-commons.gql")
-  outputDir = File("$projectDir/src/main/java")
-  packageName = "org.migor.rich.mq.generated"
+// https://netflix.github.io/dgs/generating-code-from-schema/
+val graphqlCodegen = tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
+  schemaPaths = mutableListOf(
+    "$projectDir/src/main/resources/schema/schema.graphqls"
+  )
+  packageName = "org.migor.feedless.generated"
+  generateInterfaces = false
+  language = "java"
 }
 
-tasks.register("codegen") {
-  dependsOn("graphqlCodegen")
+val codegen = tasks.register("codegen") {
+  dependsOn(graphqlCodegen, compilejj)
 }
 
 tasks.named<JavaCompile>("compileJava") {
-  dependsOn("graphqlCodegen")
+  dependsOn(graphqlCodegen)
 }
 
 tasks.withType<KotlinCompile> {
   kotlinOptions {
-    freeCompilerArgs = listOf("-Xjsr305=strict")
-    jvmTarget = "11"
+//    freeCompilerArgs = listOf("-Xjsr305=strict")
+//    jvmTarget = "17"
   }
 }
 
@@ -138,8 +187,9 @@ val compilejj = tasks.register("compilejj", Exec::class) {
 val cleanjj = tasks.register("cleanjj", Exec::class) {
   commandLine("sh", "./cleanjj.sh")
 }
-tasks.getByName("compileKotlin").dependsOn(fetchGithubJars, compilejj)
-tasks.getByName("compileTestKotlin").dependsOn(compilejj)
+tasks.getByName("compileKotlin").dependsOn(fetchGithubJars, codegen)
+
+tasks.getByName("compileTestKotlin").dependsOn(compilejj, codegen)
 tasks.getByName("clean").dependsOn(cleanjj)
 
 tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
@@ -154,7 +204,22 @@ tasks.register("start") {
   dependsOn("codegen", "bootRun")
 }
 
-tasks.register("buildDockerImage", Exec::class) {
+//val appBuild = tasks.findByPath(":packages:app:build")
+//
+//val copyAppDist = tasks.register<Copy>("copyAdminDist") {
+//  dependsOn(appBuild)
+//  from(appBuild!!.outputs.files)
+//  into("${project.buildDir}/app")
+//  println("Copied to ${project.buildDir}/app");
+//}
+
+val testDocker = tasks.register("testDocker", Exec::class) {
+  commandLine(
+    "sh", "./test/test-docker.sh"
+  )
+}
+
+val dockerBuild = tasks.register("buildDockerImage", Exec::class) {
   dependsOn(lintTask, "test", "bootJar")
   val major = findProperty("majorVersion") as String
   val coreVersion = findProperty("coreVersion") as String
@@ -168,15 +233,18 @@ tasks.register("buildDockerImage", Exec::class) {
   // install plarforms https://stackoverflow.com/a/60667468/807017
   // docker buildx ls
 //  commandLine("docker", "buildx", "build",
+//  environment("DOCKER_BUILDKIT", "0") // buildx has DNS issues
   commandLine(
     "docker", "build",
-    "--build-arg", "CORE_VERSION=$majorMinorPatch",
-    "--build-arg", "GIT_HASH=$gitHash",
-//    "--platform=linux/amd64,linux/arm64",
+    "--build-arg", "APP_CORE_VERSION=$majorMinorPatch",
+    "--build-arg", "APP_GIT_HASH=$gitHash",
+    "--platform=linux/amd64",
+//    "--platform=linux/arm64v8",
     "-t", "$imageName-$majorMinorPatch",
     "-t", "$imageName-$majorMinor",
     "-t", "$imageName-$major",
     "-t", imageName,
     "."
   )
+  finalizedBy(testDocker)
 }

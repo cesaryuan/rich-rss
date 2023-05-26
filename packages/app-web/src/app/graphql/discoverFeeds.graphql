@@ -1,0 +1,45 @@
+query discoverFeeds($data: DiscoverFeedsInput!) {
+  discoverFeeds(data: $data) {
+    genericFeeds {
+      feeds {
+        selectors {
+          ...BasicSelectors
+        }
+        feedUrl
+        hash
+        score
+        count
+        samples {
+          ...BasicWebDocument
+        }
+      }
+    }
+    fetchOptions {
+      ...BasicFetchOptions
+    }
+    nativeFeeds {
+      transient {
+        url
+        type
+        description
+        title
+      }
+      existing {
+        ...BasicNativeFeed
+      }
+    }
+    failed
+    errorMessage
+    document {
+      mimeType
+      htmlBody
+      title
+      url
+      description
+      language
+      imageUrl
+      favicon
+    }
+    websiteUrl
+  }
+}

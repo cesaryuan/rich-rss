@@ -1,0 +1,8 @@
+query plans {
+  plans {
+    ...BasicPlan
+    features {
+      ...BasicFeature
+    }
+  }
+}

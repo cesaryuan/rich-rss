@@ -1,0 +1,35 @@
+fragment BasicAuthentication on Authentication {
+  token
+  corrId
+}
+subscription authViaMail($email: String!, $token: String!) {
+  authViaMail(email: $email, token: $token) {
+    authentication {
+      ...BasicAuthentication
+    }
+    message {
+      message
+      isError
+    }
+    confirmCode {
+      length
+      otpId
+    }
+  }
+}
+
+mutation authAnonymous {
+  authAnonymous {
+    ...BasicAuthentication
+  }
+}
+
+mutation authRoot($data: AuthRootInput!) {
+  authRoot(data: $data) {
+    ...BasicAuthentication
+  }
+}
+
+mutation confirmCode($data: ConfirmAuthCodeInput!) {
+  authConfirmCode(data: $data)
+}

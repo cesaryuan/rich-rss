@@ -1,43 +1,46 @@
-# rich-RSS
+# feedless
 
-`rich-RSS` is a work in progress. It can be used as a middleware that allows you to manage feed subscriptions. `Rich` in this context is an umbrella term for the following features.
+`feedless` is a web app to create RSS+ feeds of most HTMLs and to manage any ATOM/RSS or JSON feed. These feed can be manipulated and remixed. 
+You may [Self-host](./docs/self-hosting.md) or join [feedless.org](https://feedless.org) to create and share feeds.
 
-It is used by [rss-proxy](https://github.com/damoeb/rss-proxy).
+
+[![Watch the video](docs/screenshot.png)](https://www.youtube.com/watch?v=PolMYwBVmzc)
 
 ## Features
-- [Network control](docs/Network-Control.md)
-- Content enrichment with Full(-text) and Quality/Quantity stats
-- Aggregation of multiple feeds
-- [Throttling](docs/Throttling.md) of feed sources
-- [Filtering](docs/Filtering.md)
-- [Web-to-Feed](docs/Web-to-Feed.md)
-- [Content Recovery](docs/Content-recovery.md)
-- Feed Healing of broken xml
-- [Plugins](docs/Plugins.md) / Webhooks
-- [Monitoring](docs/Monitoring.md) for self hosters
+- Content enrichment with Full(-text)
+- Media detection using [yt-dlp](https://github.com/yt-dlp)
+- [Web-to-Feed](docs/web-to-Feed.md)
+- Aggregation of multiple feeds into Buckets
+- [Filtering](docs/filters.md)
+- [JavaScript Support](./packages/agent/README.md) of JavaScript-based websites
+- Inline Images for archive/privacy purposes
+- Extendable using [Plugins](docs/plugins.md)
+- Simple [Self-hosting](./docs/self-hosting.md)
+- [Third-party migration](./docs/third-party-migration.md) 
 
+# Client Modules
+- [app](./packages/app-web/README.md) angular UI to manage feeds ([angular](angular.io/))
+- [cli](./packages/app-cli/README.md) CLI to query articles ([node](https://nodejs.org/))
 
-# Ideas
-- [Social Feeds](docs/Social-RSS.md) extension with Comments and Timeline
+# Server Modules
+- [core](./packages/server-core/README.md) Stateless backend ([spring boot](https://spring.io/projects/spring-boot/))
+- [agent](./packages/agent/README.md) Puppeteer wrapper ([nestjs](https://nestjs.com/))
+
+# Getting Started
+See [Self-hosting](./docs/self-hosting.md) or [development](./docs/development.md)
 
 ## Changelog
 See [changelog](changelog.md)
 
-## Roadmap
-See [roadmap](roadmap.md)
-
 ## Contact
-[via twitter](https://twitter.com/damoeb)
+feedlessapp/at/proton/dot/me
 
 ## Related Projects
 - [feedirss](https://www.feedirss.com/)
-- [datorss](https://www.datorss.com/)
 - [nitter](https://github.com/zedeus/nitter)
 - [invidious](https://github.com/iv-org/invidious)
-- [piped](https://github.com/TeamPiped/Piped)
 - [siftrss](https://siftrss.com/)
 - [xtractor](https://github.com/mohaps/xtractor)
-- [readability](https://github.com/mozilla/readability)
 
 ## License
 [EUPL-1.2](https://opensource.org/licenses/EUPL-1.2)

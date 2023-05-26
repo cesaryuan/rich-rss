@@ -1,0 +1,1128 @@
+scalar DateTime
+scalar JSON
+scalar Long
+
+enum ArticleReleaseStatus {
+  released,
+  unreleased,
+  dropped
+}
+
+enum ArticleType {
+  feed,
+  ops
+}
+
+enum Visibility {
+  isPublic,
+  isPrivate
+}
+
+enum SortOrder {
+  desc, asc
+}
+
+enum SortField {
+  publishedAt,
+}
+
+interface Paginated {
+  pagination: Pagination!
+}
+
+interface Entity {
+  id: ID!
+  createdAt: Long!
+}
+
+type Subscription {
+  authViaMail(email: String!, token: String!): AuthenticationEvent!
+  registerAgent(data: RegisterAgentInput!): AgentEvent!
+  registerCli: AuthenticationEvent!
+}
+
+input RegisterAgentInput {
+  secretKey: SecretKey
+}
+
+input SecretKey {
+  email: String!
+  secretKey: String!
+}
+
+type AgentEvent {
+  harvestRequest: HarvestRequest
+  authentication: AgentAuthentication
+}
+
+type AgentAuthentication {
+  token: String!
+}
+
+type HarvestRequest {
+  id: ID!
+  corrId: ID!
+  websiteUrl: String!
+  emit: HarvestEmitType!
+  baseXpath: String!
+  prerender: Boolean!
+  prerenderWaitUntil: PuppeteerWaitUntil!
+  prerenderScript: String
+}
+
+enum HarvestEmitType {
+  markup, text, pixel
+}
+
+type AuthenticationEvent {
+  authentication: Authentication
+  message: AuthenticationEventMessage
+  confirmCode: ConfirmCode
+}
+
+type AuthenticationEventMessage {
+  isError: Boolean!
+  message: String!
+}
+
+type ConfirmCode {
+  otpId: ID!
+  length: Int!
+}
+
+type Authentication {
+  token: String!
+  corrId: ID!
+}
+
+type Query {
+  serverSettings: ServerSettings!
+  article(data: ArticleWhereInput!): Article!
+  webDocument(data: WebDocumentWhereInput!): WebDocument!
+  nativeFeed(data: NativeFeedWhereInput!): NativeFeed!
+  genericFeed(data: GenericFeedWhereInput!): GenericFeed!
+  bucket(data: BucketWhereInput!): Bucket!
+  importer(data: ImporterInput!): Importer!
+  importers(data: ImportersInput!): ImportersResponse!
+  articles(data: ArticlesInput!): ArticlesResponse!
+  discoverFeeds(data: DiscoverFeedsInput!): FeedDiscoveryResponse!
+  buckets(data: BucketsInput!): BucketsResponse!
+  bucketsOrNativeFeeds(data: BucketsOrNativeFeedsInput!): [BucketOrNativeFeed!]!
+  nativeFeeds(data: NativeFeedsInput!): NativeFeedsResponse!
+  genericFeeds(data: GenericFeedsInput!): GenericFeedsResponse!
+  remoteNativeFeed(data: RemoteNativeFeedInput!): RemoteNativeFeed!
+  profile: Profile!
+  plans: [Plan!]!
+}
+
+type BucketOrNativeFeed {
+  bucket: Bucket
+  feed: NativeFeed
+}
+
+input RemoteNativeFeedInput {
+  nativeFeedUrl: String!
+  applyFilter: FilterInput
+}
+
+type Profile {
+  minimalFeatureState: FeatureState!
+  preferFulltext: Boolean!
+  isLoggedIn: Boolean!
+  isAnonymous: Boolean!
+  dateFormat: String
+  timeFormat: String
+  userId: ID
+  user: User
+  preferReader: Boolean!
+}
+
+type Plan {
+  id: ID!
+  name: PlanName!
+  isPrimary: Boolean!
+  availability: PlanAvailability!
+  costs: Float!
+  features: [Feature!]!
+}
+
+enum PlanAvailability {
+  available,
+  by_request,
+  unavailable
+}
+
+enum PlanName {
+  free,
+  basic
+}
+
+type ServerSettings {
+  apiUrls: ApiUrls!
+  features: [Feature!]!
+}
+
+type ApiUrls {
+  webToFeed: String!
+}
+
+type Feature {
+  name: FeatureName!
+  state: FeatureState!
+  value: FeatureValue!
+}
+
+type FeatureValue {
+  boolVal: FeatureBooleanValue
+  numVal: FeatureIntValue
+}
+
+type FeatureIntValue {
+  value: Int!
+}
+
+type FeatureBooleanValue {
+  value: Boolean!
+}
+
+enum FeatureState {
+  off,
+  experimental,
+  beta,
+  stable
+}
+
+enum FeatureName {
+  database,
+  elasticsearch,
+  puppeteer,
+  authentication,
+  authRoot,
+  authSSO,
+  authMail,
+  #
+  rateLimit,
+  notifications,
+  feedsMaxRefreshRate,
+  bucketsMaxCount,
+  bucketsAccessOther,
+  feedsMaxCount,
+  feedsFulltext,
+  itemsInlineImages,
+
+  genFeedFromWebsite,
+  genFeedFromFeed,
+  genFeedFromPageChange,
+  genFeedWithPrerender,
+  genFeedWithPuppeteerScript,
+
+  itemsNoUrlShortener,
+  itemsRetention,
+  feedsPrivateAccess,
+  bucketsPrivateAccess,
+  feedAuthentication,
+  itemEmailForward,
+  itemWebhookForward,
+  api
+}
+
+input BucketWhereInput {
+  where: BucketUniqueWhereInput!
+}
+
+input GenericFeedWhereInput {
+  where: GenericFeedUniqueWhereInput!
+}
+
+input NativeFeedWhereInput {
+  where: NativeFeedUniqueWhereInput!
+}
+
+input WebDocumentWhereInput {
+  where: WebDocumentUniqueWhereInput!
+}
+
+input ArticleWhereInput {
+  where: ArticleUniqueWhereInput!
+}
+
+type ArticleContext {
+  articleId: ID!
+  articles(page: Int!): [Article!]!
+  links(page: Int!): [WebDocument!]!
+  #  buckets(page: Int!): [Bucket!]
+  #  nativeFeeds(page: Int!): [NativeFeed!]
+}
+
+type Mutation {
+  authAnonymous: Authentication!
+  authRoot(data: AuthRootInput!): Authentication!
+  authConfirmCode(data: ConfirmAuthCodeInput!): Boolean!
+  submitAgentData(data: SubmitAgentDataInput!): Boolean!
+
+  createArticle(data: ArticleCreateInput!): Article!
+  updateArticles(data: ArticlesUpdateWhereInput!): Boolean!
+  deleteArticles(data: ArticlesDeleteWhereInput!): Boolean!
+
+  createBuckets(data: BucketsCreateInput!): [Bucket!]!
+  updateBucket(data: BucketUpdateInput!): Bucket!
+  deleteBucket(data: BucketDeleteInput!): Boolean!
+
+  createImporters(data: ImportersCreateInput!): [Importer!]!
+  updateImporter(data: ImporterUpdateInput!): Importer!
+  deleteImporter(data: ImporterDeleteInput!): Boolean!
+
+  createNativeFeeds(data: CreateNativeFeedsInput!): [NativeFeed!]!
+  updateNativeFeed(data: NativeFeedUpdateInput!): NativeFeed!
+  deleteNativeFeed(data: NativeFeedDeleteInput!): Boolean!
+
+  #  createGenericFeed(data: GenericFeedCreateInput!): GenericFeed!
+  #  updateGenericFeed(data: GenericFeedUpdateInput!): GenericFeed!
+  #  deleteGenericFeed(data: GenericFeedDeleteInput!): Boolean!
+
+  createApiToken: UserSecret!
+  deleteApiTokens(data: DeleteApiTokensInput!): Boolean!
+
+  #  createPageChangeFeed(data: PageChangeFeedCreateInput!): PageChangeFeed!
+
+  updateCurrentUser(data: UpdateCurrentUserInput!): Boolean!
+  logout: Boolean
+}
+
+input AuthRootInput {
+  email: String!
+  secretKey: String!
+}
+
+input UpdateCurrentUserInput {
+  acceptedTermsAndServices: BoolUpdateOperationsInput
+  purgeScheduledFor: NullableUpdateOperationsInput
+  plugins: [NullablePluginUpdateOperationsInput!]
+}
+
+input NullablePluginUpdateOperationsInput {
+  id: ID!
+  value: NullableBoolUpdateOperationsInput!
+}
+
+input CreateNativeFeedsInput {
+  feeds: [NativeGenericOrFragmentWatchFeedCreateInput!]!
+}
+
+input DeleteApiTokensInput {
+  where: UserSecretWhereInput!
+}
+
+input UserSecretWhereInput {
+  in: [String!]!
+}
+
+input UserSecretCreateInput {
+  type: UserSecretType!
+}
+
+input SubmitAgentDataInput {
+  jobId: ID!
+  corrId: ID!
+  harvestResponse: HarvestResponse!
+}
+
+input HarvestResponse {
+  dataBase64: String
+  dataAscii: String
+  errorMessage: String
+  isError: Boolean!
+  url: String
+}
+
+input FilterInput {
+  filter: String!
+}
+
+input ConfirmAuthCodeInput {
+  code: String!
+  otpId: ID!
+}
+
+input ArticlesDeleteWhereInput {
+  where: ArticleMultipleWhereInput!
+}
+
+input ArticleMultipleWhereInput {
+  in: [ArticleUniqueWhereInput!]!
+}
+
+input ArticlesUpdateWhereInput {
+  where: ArticleMultipleWhereInput!
+  data: ArticleInput!
+}
+
+input ArticleInput {
+  status: ArticleReleaseStatusUpdateOperationsInput
+}
+
+input ArticleCreateInput {
+  data: ArticleCreateOrConnectInput!
+  reference: BucketOrNativeFeedOrArticleWhereInput
+}
+
+input BucketOrNativeFeedOrArticleWhereInput {
+  article: ArticleUniqueWhereInput
+  bucket: BucketUniqueWhereInput
+  nativeFeed: NativeFeedUniqueWhereInput
+}
+
+input NativeFeedUniqueWhereInput {
+  id: ID!
+}
+
+input BucketUniqueWhereInput {
+  id: ID!
+}
+
+input ArticleCreateOrConnectInput {
+  create: ArticleInput
+  connect: ArticleUniqueWhereInput
+}
+
+input ArticleUniqueWhereInput {
+  id: ID!
+}
+
+input WebDocumentUniqueWhereInput {
+  id: ID!
+}
+
+input ImporterInput {
+  importer: ImporterUniqueWhereInput
+  bucketAndFeed: ImporterWhereBucketAndFeedInput
+}
+
+input ImportersInput {
+  where: ImportersWhereInput
+  cursor: Cursor!
+  orderBy: OrderByInput
+}
+
+input ImportersWhereInput {
+  status: NativeFeedStatusOneOfInput
+  buckets: BucketsOneOfWhereInput
+}
+
+input BucketsOneOfWhereInput {
+  oneOf: [ID!]!
+}
+
+input ImporterWhereBucketAndFeedInput {
+  bucket: BucketUniqueWhereInput!
+  nativeFeed: NativeFeedUniqueWhereInput!
+}
+
+input GenericFeedDeleteInput {
+  genericFeed: GenericFeedUniqueWhereInput!
+}
+
+input GenericFeedUniqueWhereInput {
+  id: ID!
+}
+
+input NativeFeedDeleteInput {
+  nativeFeed: NativeFeedUniqueWhereInput!
+}
+
+input ImporterDeleteInput {
+  where: ImporterUniqueWhereInput!
+}
+input ImporterUniqueWhereInput {
+  id: ID!
+}
+
+input BucketDeleteInput {
+  where: BucketUniqueWhereInput!
+  keepFeeds: Boolean
+}
+
+input GenericFeedCreateInput {
+  specification: GenericFeedSpecificationInput!
+  title: String!
+  description: String
+  language: String
+  plugins: [ID!]
+}
+
+input GenericFeedUpdateInput {
+  data: GenericFeedUpdateDataInput!
+  where: GenericFeedUniqueWhereInput!
+}
+
+input GenericFeedUpdateDataInput {
+  specification: GenericFeedSpecificationInput!
+  title: StringUpdateOperationsInput
+  description: NullableStringUpdateOperationsInput
+}
+
+input GenericFeedSpecificationInput {
+  selectors: SelectorsInput!
+  fetchOptions: FetchOptionsInput!
+  refineOptions: RefineOptionsInput!
+}
+
+type GenericFeedSpecification {
+  selectors: Selectors!
+  fetchOptions: FetchOptions!,
+  refineOptions: RefineOptions!
+}
+
+enum ExtendContentOptions {
+  PREVIOUS,
+  NEXT,
+  NONE,
+  PREVIOUS_AND_NEXT
+}
+
+input SelectorsInput {
+  linkXPath: String!
+  extendContext: ExtendContentOptions
+  contextXPath: String!
+  dateXPath: String
+  paginationXPath: String
+  dateIsStartOfEvent: Boolean
+}
+
+type Selectors {
+  linkXPath: String!
+  extendContext: ExtendContentOptions!
+  contextXPath: String!
+  paginationXPath: String!
+  dateXPath: String!
+  dateIsStartOfEvent: Boolean!
+}
+
+input ImporterAttributesInput {
+  title: String
+  autoRelease: Boolean
+  filter: String
+  #  refreshRate: RefreshRate
+  segmented: SegmentInput
+  plugins: [ID!]
+}
+
+input ImportersCreateInput {
+  bucket: BucketCreateOrConnectInput!
+  feeds: [NativeFeedCreateOrConnectInput!]!
+  protoImporter: ImporterAttributesInput!
+}
+
+input ImportersCreateWithoutBucketInput {
+  feeds: [NativeFeedCreateOrConnectInput!]!
+  protoImporter: ImporterAttributesInput!
+}
+
+input SegmentInput {
+  size: Int!
+  digest: Boolean!
+  scheduleExpression: String!
+  sortBy: String!
+  sortAsc: Boolean!
+}
+
+type Segment {
+  size: Int!
+  digest: Boolean!
+  scheduleExpression: String!
+  sortBy: String!
+  sortAsc: Boolean!
+}
+
+#input RefreshRate {
+#  scheduled: ScheduledRefreshRate!
+#}
+
+input ScheduledRefreshRate {
+  expression: String!
+}
+
+input ImporterUpdateInput {
+  importer: ImporterAttributesInput!
+  where: ImporterUniqueWhereInput!
+}
+
+input NativeFeedCreateOrConnectInput {
+  connect: NativeFeedUniqueWhereInput
+  create: NativeGenericOrFragmentWatchFeedCreateInput
+}
+
+input BucketCreateOrConnectInput {
+  connect: BucketUniqueWhereInput
+  create: BucketCreateInput
+}
+
+input NativeGenericOrFragmentWatchFeedCreateInput {
+  nativeFeed: NativeFeedCreateInput
+  genericFeed: GenericFeedCreateInput
+  fragmentWatchFeed: FragmentWatchFeedCreateInput
+}
+
+input FragmentWatchFeedCreateInput {
+  fragmentXpath: String!
+  compareBy: HarvestEmitType!
+}
+
+input BucketsInput {
+  cursor: Cursor!
+  where: BucketsWhereInput
+  orderBy: OrderByInput
+}
+
+input BucketsOrNativeFeedsInput {
+  cursor: Cursor!
+  where: BucketsWhereInput
+  orderBy: OrderByInput
+}
+
+input NativeFeedsInput {
+  cursor: Cursor!
+  where: NativeFeedsWhereInput!
+  orderBy: OrderByInput
+}
+
+input GenericFeedsInput {
+  cursor: Cursor!
+  where: GenericFeedsWhereInput!
+}
+
+input OrderByInput {
+  createdAt: SortOrder
+  title: SortOrder
+}
+
+input ArticlesOrderByInput {
+  releasedAt: SortOrder
+  createdAt: SortOrder
+  title: SortOrder
+}
+
+input NativeFeedsWhereInput {
+  feedUrl: String
+  status: NativeFeedStatusOneOfInput
+  visibility: VisibilityOneOfInput
+}
+
+input GenericFeedsWhereInput {
+  websiteUrl: String
+}
+
+input BucketsWhereInput {
+  id: StringFilter
+  tags: StringArrayFilter
+}
+
+input NativeFeedStatusOneOfInput {
+  oneOf: [NativeFeedStatus!]!
+}
+
+input VisibilityOneOfInput {
+  oneOf: [Visibility!]!
+}
+
+input DateFilter {
+  gt: Long
+  lt: Long
+}
+
+input StringFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  #  contains: String
+  #  startsWith: String
+  #  endsWith: String
+  #  not: NestedStringFilter
+}
+
+input StringArrayFilter {
+  some: [String!]
+  every: [String!]
+  #  contains: String
+  #  startsWith: String
+  #  endsWith: String
+  #  not: NestedStringFilter
+}
+
+input DiscoverFeedsInput {
+  fetchOptions: FetchOptionsInput!
+}
+
+input ArticlesInput {
+  cursor: Cursor!
+  where: ArticlesWhereInput!
+  orderBy: ArticlesOrderByInput
+}
+
+input Cursor {
+  page: Int!
+  pageSize: Int
+}
+
+input ArticlesWhereInput {
+  stream: StreamWhereInput!
+  type: ArticleTypeFilterInput
+  like: ArticleUniqueWhereInput
+  createdAt: DateFilter
+  status: ArticleReleaseStatusFilterInput
+}
+
+input StreamWhereInput {
+  id: StringFilter
+  bucket: BucketsWhereInput
+  feed: NativeFeedsWhereInput
+}
+
+input ArticleReleaseStatusFilterInput {
+  oneOf: [ArticleReleaseStatus!]!
+}
+
+input ArticleTypeFilterInput {
+  oneOf: [ArticleType!]!
+}
+
+input BucketsCreateInput {
+  buckets: [BucketCreateInput!]!
+}
+
+input BucketCreateInput {
+  title: String!
+  description: String!
+  websiteUrl: String
+  imageUrl: String
+  visibility: Visibility
+  tags: [String!]
+  importers: [ImportersCreateWithoutBucketInput!]
+}
+
+input BucketUpdateInput {
+  where: BucketUniqueWhereInput!
+  data: BucketUpdateDataInput!
+}
+
+input BucketUpdateDataInput {
+  name: NullableStringUpdateOperationsInput
+  description: NullableStringUpdateOperationsInput
+  websiteUrl: NullableStringUpdateOperationsInput
+  imageUrl: NullableStringUpdateOperationsInput
+  visibility: VisibilityUpdateOperationsInput
+  tags: NullableStringArrayUpdateOperationsInput
+}
+
+input NullableStringUpdateOperationsInput {
+  set: String
+}
+
+input NullableLongUpdateOperationsInput {
+  set: Long
+}
+
+input NullableIntUpdateOperationsInput {
+  set: Int
+}
+
+input StringUpdateOperationsInput {
+  set: String!
+}
+input ArticleReleaseStatusUpdateOperationsInput {
+  set: ArticleReleaseStatus!
+}
+
+input NullableBoolUpdateOperationsInput {
+  set: Boolean
+}
+input BoolUpdateOperationsInput {
+  set: Boolean!
+}
+input NullableUpdateOperationsInput {
+  assignNull: Boolean!
+}
+
+input NullableStringArrayUpdateOperationsInput {
+  set: [String!]
+}
+
+input NativeFeedCreateInput {
+  websiteUrl: String
+  imageUrl: String
+  language: String
+  feedUrl: String!
+  title: String!
+  description: String
+  lat: Long
+  lon: Long
+  plugins: [ID!]
+  visibility: Visibility
+}
+
+input NativeFeedUpdateInput {
+  where: NativeFeedUniqueWhereInput!
+  data: NativeFeedUpdateDataInput!
+}
+
+input NativeFeedUpdateDataInput {
+  #  websiteUrl: NullableStringUpdateOperationsInput
+  #  imageUrl: NullableStringUpdateOperationsInput
+  #  language: NullableStringUpdateOperationsInput
+  feedUrl: StringUpdateOperationsInput
+  #  title: StringUpdateOperationsInput
+  #  description: NullableStringUpdateOperationsInput
+  #  lat: NullableLongUpdateOperationsInput
+  #  lon: NullableLongUpdateOperationsInput
+  harvestIntervalMin: NullableIntUpdateOperationsInput
+  #  autoRelease: BoolUpdateOperationsInput
+  plugins: NullableStringArrayUpdateOperationsInput
+#  inlineImages: BoolUpdateOperationsInput
+  visibility: VisibilityUpdateOperationsInput
+}
+
+input VisibilityUpdateOperationsInput {
+  set: Visibility!
+}
+
+
+type RemoteNativeFeed {
+  title: String!
+  description: String
+  author: String
+  websiteUrl: String
+  language: String
+  items: [FilteredRemoteNativeFeedItem!],
+  feedUrl: String!
+  publishedAt: Long!
+  expired: Boolean!
+}
+
+type FilteredRemoteNativeFeedItem {
+  omitted: Boolean!
+  item: WebDocument!
+}
+
+type BucketsResponse implements Paginated {
+  pagination: Pagination!
+  buckets: [Bucket!]!
+}
+
+type NativeFeedsResponse implements Paginated {
+  nativeFeeds: [NativeFeed!]!
+  pagination: Pagination!
+}
+
+type GenericFeedsResponse implements Paginated {
+  genericFeeds: [GenericFeed!]!
+  pagination: Pagination!
+}
+
+type ArticlesResponse implements Paginated {
+  articles: [Article!]!
+  pagination: Pagination!
+}
+
+type ImportersResponse implements Paginated {
+  importers: [Importer!]!
+  pagination: Pagination!
+}
+
+type Pagination {
+  page: Int!
+  pageSize: Int!
+  #  totalPages: Int!
+  #  totalElements: Long!
+  isLast: Boolean!
+  isEmpty: Boolean!
+  isFirst: Boolean!
+}
+
+type GenericFeed implements Entity {
+  id: ID!
+  specification: GenericFeedSpecification!
+  feedUrl: String!
+  hash: String!
+  #  nativeFeedId: ID!
+  createdAt: Long!
+  #  nativeFeed: NativeFeed!
+}
+
+type NativeFeed implements Entity {
+  id: ID!
+  createdAt: Long!
+  domain: String
+  websiteUrl: String
+  imageUrl: String
+  iconUrl: String
+  feedUrl: String!
+  title: String!
+  description: String
+  streamId: ID!
+  status: NativeFeedStatus!
+  #  status: String!
+  autoRelease: Boolean!
+  genericFeed: GenericFeed
+  lastUpdatedAt: Long
+  lastChangedAt: Long
+  #  nextRefreshAt: Long
+  visibility: Visibility!
+  histogram(frame: HistogramFrame!): Histogram!
+  lat: Long
+  lon: Long
+  ownerId: ID!
+  importers: [Importer!]!
+  #  importersCount: Long!
+}
+
+type Bucket implements Entity {
+  id: ID!
+  createdAt: Long!
+  title: String!
+  tags: [String!]
+  description: String!
+  websiteUrl: String
+  imageUrl: String
+  visibility: Visibility!
+  streamId: ID!
+  ownerId: ID!
+  #  articles(filter: ArticlesWhereInput!): PagedArticlesResponse!
+  #  importers: [Importer!]
+  #  articlesCount: ArticlesCount!
+  importersCount: Int!
+  histogram(frame: HistogramFrame!): Histogram!
+  #  emails: String
+  webhook: String
+}
+
+type Histogram {
+  frame: HistogramFrame!
+  items: [HistogramItem!]!
+}
+
+enum HistogramFrame {
+  last_month
+}
+
+type HistogramItem {
+  index: String!
+  count: Int!
+}
+
+type Importer implements Entity {
+  id: ID!
+  createdAt: Long!
+  autoRelease: Boolean!
+  filter: String
+  title: String
+  plugins: [ID!]!
+#  email: String
+#  webhook: String
+  lastUpdatedAt: Long
+  nativeFeedId: ID!
+  nativeFeed: NativeFeed!
+  bucketId: ID!
+  bucket: Bucket!
+  segmented: Segment
+  histogram(frame: HistogramFrame!): Histogram!
+}
+
+enum NativeFeedStatus {
+  ok,
+  defective,
+  disabled,
+  not_found,
+  never_fetched,
+  service_unavailable
+}
+
+type Enclosure {
+  size: Long
+  duration: Long
+  type: String!
+  url: String!
+}
+
+type Article implements Entity {
+  id: ID!
+  createdAt: Long!
+  status: ArticleReleaseStatus!
+  webDocumentId: ID!
+  streamId: ID!
+  #  nativeFeedId: ID!
+  bucket: Bucket
+  context: ArticleContext!
+  #  nativeFeed: NativeFeed!
+  webDocument: WebDocument!
+  type: ArticleType!
+}
+
+type WebDocument implements Entity {
+  id: ID!
+  createdAt: Long!
+  title: String!
+  description: String!
+  contentTitle: String
+  contentText: String
+  contentRaw: String
+  contentRawMime: String
+  url: String!
+  imageUrl: String
+  publishedAt: Long!
+  startingAt: Long
+  updatedAt: Long
+  tags: [String!]
+  enclosures: [Enclosure!]
+}
+
+input ContentInput {
+  title: String!
+  contentText: String!
+  contentRaw: String
+  contentRawMime: String
+  url: String!
+  publishedAt: Long!
+  #  enclosures: [Enclosure!]
+}
+
+type FeedDiscoveryResponse {
+  genericFeeds: GenericFeeds!
+  nativeFeeds: [TransientOrExistingNativeFeed!]
+  #  relatedFeeds: [NativeFeedGql]
+  websiteUrl: String!
+  failed: Boolean!
+  errorMessage: String
+  document: FeedDiscoveryDocument
+  fetchOptions: FetchOptions!
+}
+
+type TransientOrExistingNativeFeed {
+  transient: TransientNativeFeed
+  existing: NativeFeed
+}
+
+type FeedDiscoveryDocument {
+  mimeType: String
+  htmlBody: String
+  url: String
+  title: String
+  description: String
+  language: String
+  imageUrl: String
+  favicon: String
+}
+
+type GenericFeeds {
+  feeds: [TransientGenericFeed!]!
+}
+
+type FetchOptions {
+  websiteUrl: String!
+  prerender: Boolean!
+  prerenderWaitUntil: PuppeteerWaitUntil!
+  prerenderScript: String
+}
+
+type TransientNativeFeed {
+  url: String!
+  type: String!
+  title: String!
+  description: String
+}
+
+type TransientGenericFeed {
+  selectors: Selectors!
+  hash: String!
+  feedUrl: String!
+  count: Int
+  score: Float!
+  samples: [WebDocument!]!
+}
+
+input FetchOptionsInput {
+  websiteUrl: String!
+  prerender: Boolean!
+  prerenderWaitUntil: PuppeteerWaitUntil
+  prerenderScript: String
+}
+
+enum PuppeteerWaitUntil {
+  networkidle0
+  networkidle2
+  load
+  domcontentloaded
+}
+
+enum ContentSortTag {
+  newest,
+  oldest
+}
+enum ContentTypeTag {
+  LONG,
+  SHORT,
+  AUDIO,
+  VIDEO,
+  FULLTEXT
+}
+
+enum ContentCategoryTag {
+  kids
+  sports
+  commercial
+  online
+}
+
+type RefineOptions {
+  filter: String
+}
+
+input RefineOptionsInput {
+  filter: String
+}
+
+type LoginResponse {
+  token: String!
+  user: User!
+}
+
+type User implements Entity {
+  id: ID!
+  createdAt: Long!
+  email: String!
+  name: String!
+  subscriptionId: ID
+  subscription: PlanSubscription
+  acceptedTermsAndServices: Boolean!
+  purgeScheduledFor: Long
+  notificationsStreamId: ID!
+  secrets: [UserSecret!]!
+  plugins: [Plugin!]!
+}
+
+type Plugin {
+  id: ID!
+  value: Boolean!
+  perProfile: Boolean!
+  description: String!
+  state: FeatureState!
+}
+
+type UserSecret {
+  id: ID!
+  type: UserSecretType!
+  value: String!
+  valueMasked: Boolean!
+  validUntil: Long
+  lastUsed: Long
+}
+
+enum UserSecretType {
+  SecretKey, Jwt
+}
+
+type PlanSubscription {
+  planId: ID!
+  plan: Plan!
+  startedAt: Long!
+  expiry: Long
+}

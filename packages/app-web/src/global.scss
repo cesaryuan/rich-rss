@@ -1,0 +1,153 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import "~@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+app-bubble {
+  margin-right: 35px;
+}
+
+// https://ionicframework.com/docs/layout/css-utilities#ionic-breakpoints
+@media only screen and (min-width: 992px) {
+  ion-modal {
+    --width: 900px;
+    --height: 900px;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+  ion-modal {
+    --width: 100%;
+    --height: 100%;
+  }
+}
+
+@media only screen and (max-height: 768px) {
+  ion-modal {
+    --width: 100%;
+    --height: 100%;
+  }
+}
+
+app-wizard {
+  display: flex;
+  flex: 1;
+}
+
+.flex {
+  display: flex;
+  flex: 1;
+  &__column {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+  &__row {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+  }
+}
+
+ion-accordion {
+  ion-label {
+    font-size: 0.9rem;
+  }
+}
+
+.accordion-group-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  background: var(--ion-item-background);
+}
+
+ion-accordion-group {
+  ion-grid {
+    background: var(--ion-item-background);
+
+    ion-row {
+      ion-col:first-child {
+        text-align: right;
+        align-self: center;
+      }
+    }
+  }
+}
+
+ion-list {
+  &.grid {
+    display: flex;
+    ion-item {
+      flex: 1;
+      ion-checkbox {
+        display: none;
+      }
+    }
+  }
+}
+
+ion-item {
+  &.ion-pristine {
+    color: var(--ion-color-medium);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ion-item-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ion-color-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ion-color-dark-shade);
+}
+
+.overlay {
+  position: absolute;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  &__background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--ion-item-background);
+    opacity: 0.7;
+  }
+}
+
+.hidden {
+  display: none !important;
+}
